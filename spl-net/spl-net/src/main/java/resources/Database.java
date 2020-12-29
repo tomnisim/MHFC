@@ -31,7 +31,11 @@ public class Database {
         private static Database instance = new Database();
     }
     private Database() {
-        // TODO: implement
+        adminsList = new HashMap<String, Admin>();
+        studentsList = new HashMap<String, Student>();
+        courselist = new HashMap<Integer, Course>();
+
+
     }
     /**
      * Retrieves the single instance of this class.
@@ -45,8 +49,7 @@ public class Database {
      * into the Database, returns true if successful.
      */
     boolean initialize(String coursesFilePath) {
-        courselist = new HashMap<Integer, Course>();
-        String courses = coursesFilePath;
+        String courses = coursesFilePath; // have to read from the file and create a string that contains all the course info
         int courseNum=0;
         String courseName="";
         String kdamCourseList="";
@@ -96,14 +99,13 @@ public class Database {
                 numOfMaxStudents = stringToInt(numOfMS);
             }
             Course course=new Course(courseNum,courseName,numOfMaxStudents,kdamCourse);
-            courselist.put (courseNum, course);
+            courselist.put(courseNum, course);
 
 
         }//while
 
 
-        adminsList = new HashMap<String, Admin>();
-        studentsList = new HashMap<String, Student>();
+
 
         // TODO: implement
         // admin
@@ -157,7 +159,7 @@ public class Database {
 
     }
 
-    public void login(String username, String password) {
+    public User login(String username, String password) {
         // no such a user
         if (!adminsList.containsKey(username) & !studentsList.containsKey(username))
             throw new IllegalArgumentException("there is no such an user");
@@ -174,6 +176,7 @@ public class Database {
             throw new IllegalArgumentException("the user is already logged in");
         // login
         user.login();
+        return user;
     }
 
     public void logout(String username, String password) {
@@ -194,7 +197,7 @@ public class Database {
         // logout
         user.logout();
     }
-    public void registerToCourse(int courseNumber)
+    public void registerToCourse(String userName,int courseNumber)
     {
         // no such a course
         if (!courselist.containsKey(courseNumber))
@@ -211,29 +214,33 @@ public class Database {
         }
         // admin cant register to course
     }
-    public void kdamCourse(int courseNumber) {
+    public String kdamCheck(int courseNumber) {
         if (!courselist.containsKey(courseNumber))
             throw new IllegalArgumentException("there is not such a course");
         courselist.get(courseNumber).getKdam();
 
     }
 
-    public void CourseStat(int courseNumber) {
+    public String CourseStat(int courseNumber) {
 
 
     }
 
-    public void studentStat(String username) {
+    public String studentStat(String username) {
 
     }
 
-    public void isRegisterd(int courseNumber) {
+    public boolean isRegisterd(String userName,int courseNumber) {
     }
 
-    public void unregister(int courseNumber) {
+    public boolean unregister(String usreName,int courseNumber) {
     }
 
-    public void myCourses(int courseNumber) {
+    public String myCourses(String userName) {
+    }
+    private String listToString(List<Integer> list) {
+        // have to implement
+        return "";
     }
 
 }

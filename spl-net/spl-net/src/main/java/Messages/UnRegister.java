@@ -1,6 +1,6 @@
 package Messages;
 
-public class UnRegister implements Message {
+public class UnRegister extends Message {
     private int opcode;
     private int courseNumber;
     public UnRegister(int courseNumber)
@@ -11,5 +11,9 @@ public class UnRegister implements Message {
     public void operation()
     {
 
+    }
+    public String toString()
+    {
+        return "";
     }
 }

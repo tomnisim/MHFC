@@ -1,6 +1,6 @@
 package Messages;
 
-public class Logout implements Message {
+public class Logout extends Message {
     private int opcode;
 
     public Logout()
@@ -11,5 +11,9 @@ public class Logout implements Message {
     public void operation()
     {
 
+    }
+    public String toString()
+    {
+        return "";
     }
 }

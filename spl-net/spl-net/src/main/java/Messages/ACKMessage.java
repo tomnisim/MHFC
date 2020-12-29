@@ -1,15 +1,25 @@
 package Messages;
 
-public class ACKMessage implements Message {
-    private int opcode;
-    private int messageOpcose;
-    public ACKMessage(int messageOpcose)
+public class ACKMessage extends Message {
+    private Integer opcode;
+    private Integer messageOpcode;
+    private String description;
+
+
+    public ACKMessage(int messageOpcode,String description)
     {
         this.opcode=12;
-        this.messageOpcose=messageOpcose;
+        this.messageOpcode=messageOpcode;
+        this.description=description;
     }
     public void operation()
     {
 
+    }
+    public String toString()
+    {
+        String answer;
+        answer=opcode.toString()+messageOpcode.toString()+description+"0";
+        return answer;
     }
 }

@@ -2,9 +2,12 @@ package bgrs;
 
 
 
+import Messages.ACKMessage;
+import Messages.Error;
 import Messages.Message;
 import bgu.spl.net.api.MessagingProtocol;
 import resources.Database;
+import resources.User;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -14,164 +17,146 @@ public class BgrsProtocol implements MessagingProtocol {
 
     private boolean shouldTerminate = false;
     private Database database;
+    private User connectedUser;
     //@Override
-    public String process(String msg)
+    public Message process(Message msg)
     {
-        int messageInd=0;
-        byte[] message = msg.getBytes(); //new byte[2];
-        byte[] two = new byte[2];
-        two[0]=message[messageInd];
-        messageInd++;
-        two[1]=message[messageInd];
-        messageInd++;
-
-        short opcode = bytesToShort(two);
-        //int opcode = this.toInt(msg.substring(0, 8));
+        int opcode = msg.getOpcode();
         int courseNumber;
         String username, password;
-        String errorMessage = "13";
-//----------------------------------------------------- check if (opcode ==1) , if correct - duplicate it to the rest cases
+        // 11 cases
         if (opcode == 1) // if opcode = 1
         {
-
+            username=msg.getUser();
+            password=msg.getPassword();
             try {
-                List<Byte> userName = new LinkedList<>();
-                for(;messageInd<message.length & message[messageInd]!='0';messageInd++)
-                {
-                    userName.add(message[messageInd]);
-                }
-                messageInd++;//skip the zero
-                Byte[] userNameBytes= (Byte[]) userName.toArray();
-
-
-                List<Byte> passwordL = new LinkedList<>();
-                for(;messageInd<message.length & message[messageInd]!='0';messageInd++)
-                {
-                    userName.add(message[messageInd]);
-                }
-                messageInd++;//skip the zero
-                Byte[] passwordBytes= (Byte[]) passwordL.toArray();
-
-
-
-
-                //database.RegisterAdmin(username,password);
+                database.RegisterAdmin(username,password);
             } catch (Exception e) {
                 // send error message
-                errorMessage = errorMessage + opcode;
-
+                return new Error(1);
             }
-
+                return new ACKMessage(1,"admin register successfully");
         }
-        if (opcode == 2) {
+        if (opcode == 2)         {
+            username=msg.getUser();
+            password=msg.getPassword();
             try {
-                //database.StudentRegister(username,password);
+                database.StudentRegister(username,password);
             } catch (Exception e) {
-                errorMessage = errorMessage + opcode;
-
+                // send error message
+                return new Error(2);
             }
+            return new ACKMessage(2,"student register successfully");
         }
-        if (opcode == 3) {
+        if (opcode == 3)         {
+            username=msg.getUser();
+            password=msg.getPassword();
             try {
-                //database.login(username,password);
+                database.login(username,password);
             } catch (Exception e) {
-                errorMessage = errorMessage + opcode;
-
+                // send error message
+                return new Error(3);
             }
+            return new ACKMessage(3,"login successfully");
         }
-        if (opcode == 4) {
+        if (opcode == 4)
+        {
+            username=this.connectedUser.getUserName();
+            password=this.connectedUser.getPassword();
             try {
-                //database.logout(connectedUser.username,connectedUser.password);
+                database.logout(username,password);
             } catch (Exception e) {
-                errorMessage = errorMessage + opcode;
-
-
+                // send error message
+                return new Error(4);
             }
+            return new ACKMessage(4,"logout successfully");
         }
-        if (opcode == 5) {
-            try {
-                //database.registerToCourse(courseNumber);
-            } catch (Exception e) {
-                errorMessage = errorMessage + opcode;
 
+        if (opcode == 5)  {
+            username=this.connectedUser.getUserName();
+            courseNumber=msg.getCourseNumber();
+            try {
+                database.registerToCourse(username,courseNumber);
+            } catch (Exception e) {
+                // send error message
+                return new Error(5);
             }
+            return new ACKMessage(5,"registered to course successfully");
         }
-        if (opcode == 6) {
+        if (opcode == 6)  {
+            courseNumber=msg.getCourseNumber();
+            String temp;
             try {
-                // database.kdamCourse(courseNumber);
+                temp = database.kdamCheck(courseNumber);
             } catch (Exception e) {
-                errorMessage = errorMessage + opcode;
-
+                // send error message
+                return new Error(6);
             }
+            return new ACKMessage(6,(temp));
         }
-        if (opcode == 7) {
+        if (opcode == 7)  {
+            courseNumber=msg.getCourseNumber();
+            String temp;
             try {
-                //database.CourseSeats(courseNumber);
+                temp = database.CourseStat(courseNumber);
             } catch (Exception e) {
-                errorMessage = errorMessage + opcode;
-
+                // send error message
+                return new Error(7);
             }
+            return new ACKMessage(7,temp);
         }
-        if (opcode == 8) {
+        if (opcode == 8)         {
+            username=msg.getUser();
+            String answer;
             try {
-                // database.studentStat(username);
+                answer = database.studentStat(username);
             } catch (Exception e) {
-                errorMessage = errorMessage + opcode;
-
+                // send error message
+                return new Error(8);
             }
+            return new ACKMessage(8,answer);
         }
-        if (opcode == 9) {
-            try {
-                //database.isRegisterd(courseNumber);
-            } catch (Exception e) {
-                errorMessage = errorMessage + opcode;
+        if (opcode == 9)  {
+            username=this.connectedUser.getUserName();
+            courseNumber=msg.getCourseNumber();
 
+            boolean flag = database.isRegisterd(username,courseNumber);
+            if (!flag){
+                return new ACKMessage(9,"NOT REGISTERED");
             }
+
+            return new ACKMessage(9,"REGISTERED");
         }
-        if (opcode == 10) {
+        if (opcode == 10)         {
+            username=this.connectedUser.getUserName();
+            courseNumber=msg.getCourseNumber();
+            String answer;
             try {
-                //database.unregister(courseNumber);
+                database.unregister(username,courseNumber);
             } catch (Exception e) {
-                errorMessage = errorMessage + opcode;
-
+                // send error message
+                return new Error(10);
             }
+            return new ACKMessage(10,"unregister successfully");
         }
         if (opcode == 11) {
-            boolean flag = true;
+            username=this.connectedUser.getUserName();
+            String answer;
             try {
-                // database.myCourses(courseNumber);
+                answer = database.myCourses(username);
             } catch (Exception e) {
-                errorMessage = errorMessage + opcode;
-                flag = false;
-
+                return new Error(11);
             }
-            if (flag) {
+            return new ACKMessage(11,answer);
 
-            }
             // good message
         }
 
 
         shouldTerminate = "/n".equals(msg);
-        return "";//have to change
+        return null;
     }
 
-    //decode 2 bytes to short
-    public short bytesToShort(byte[] byteArr)
-    {
-        short result = (short)((byteArr[0] & 0xff) << 8);
-        result += (short)(byteArr[1] & 0xff);
-        return result;
-    }
-
-    //encode 2 bytes to short
-    public byte[] shortToBytes(short num)
-    {
-        byte[] bytesArr = new byte[2];
-        bytesArr[0] = (byte)((num >> 8) & 0xFF);
-        bytesArr[1] = (byte)(num & 0xFF);
-        return bytesArr;
-    }
 
 
 

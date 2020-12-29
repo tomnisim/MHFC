@@ -1,6 +1,6 @@
 package Messages;
 
-public class IsRegistered implements Message {
+public class IsRegistered extends Message {
     private int opcode;
     private int courseNumber;
     public IsRegistered(int courseNumber)
@@ -11,5 +11,9 @@ public class IsRegistered implements Message {
     public void operation()
     {
 
+    }
+    public String toString()
+    {
+        return "";
     }
 }
