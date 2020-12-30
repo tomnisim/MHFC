@@ -52,15 +52,18 @@ public class BgrsProtocol implements MessagingProtocol {
             username=msg.getUser();
             password=msg.getPassword();
             try {
-                database.login(username,password);
+                this.connectedUser=database.login(username,password);
             } catch (Exception e) {
                 // send error message
                 return new Error(3);
             }
+
             return new ACKMessage(3,"login successfully");
         }
         if (opcode == 4)
         {
+            if (this.connectedUser==null)
+                throw new IllegalArgumentException("have to login before logout");
             username=this.connectedUser.getUserName();
             password=this.connectedUser.getPassword();
             try {
@@ -69,10 +72,13 @@ public class BgrsProtocol implements MessagingProtocol {
                 // send error message
                 return new Error(4);
             }
+            this.connectedUser=null;
             return new ACKMessage(4,"logout successfully");
         }
 
         if (opcode == 5)  {
+            if (this.connectedUser==null)
+                throw new IllegalArgumentException("have to login before register to course");
             username=this.connectedUser.getUserName();
             courseNumber=msg.getCourseNumber();
             try {
@@ -117,17 +123,24 @@ public class BgrsProtocol implements MessagingProtocol {
             return new ACKMessage(8,answer);
         }
         if (opcode == 9)  {
+            if (this.connectedUser==null)
+                throw new IllegalArgumentException("have to login before check if registered");
             username=this.connectedUser.getUserName();
             courseNumber=msg.getCourseNumber();
 
-            boolean flag = database.isRegisterd(username,courseNumber);
-            if (!flag){
+            try {
+                database.isRegisterd(username,courseNumber);
+            }
+            catch (Exception e)
+            {
                 return new ACKMessage(9,"NOT REGISTERED");
             }
 
             return new ACKMessage(9,"REGISTERED");
         }
         if (opcode == 10)         {
+            if (this.connectedUser==null)
+                throw new IllegalArgumentException("have to login before unregister");
             username=this.connectedUser.getUserName();
             courseNumber=msg.getCourseNumber();
             String answer;
@@ -140,6 +153,8 @@ public class BgrsProtocol implements MessagingProtocol {
             return new ACKMessage(10,"unregister successfully");
         }
         if (opcode == 11) {
+            if (this.connectedUser==null)
+                throw new IllegalArgumentException("have to login before check myCourses");
             username=this.connectedUser.getUserName();
             String answer;
             try {

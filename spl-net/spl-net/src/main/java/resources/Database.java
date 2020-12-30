@@ -1,6 +1,7 @@
 package resources;
 
 
+import javafx.util.Pair;
 import resources.Admin;
 import resources.Course;
 import resources.Student;
@@ -104,17 +105,131 @@ public class Database {
 
         }//while
 
-
-
-
-        // TODO: implement
-        // admin
-        // students
-        // courses
         return false;
     }
-    private List<Integer> stringToListInt(String s)
-    {
+    // update database methods
+    public void RegisterAdmin (String username, String password) {
+        if (adminsList.containsKey(username) | studentsList.containsKey(username))
+            throw new IllegalArgumentException("username is already registered");
+        adminsList.put(username,new Admin(username,password));
+
+    }
+    public void StudentRegister(String username, String password) {
+        if (adminsList.containsKey(username) | studentsList.containsKey(username))
+            throw new IllegalArgumentException("username is already registered");
+        studentsList.put(username,new Student(username,password));
+
+    }
+    public User login(String username, String password) {
+        // no such a user
+        if (!adminsList.containsKey(username) & !studentsList.containsKey(username))
+            throw new IllegalArgumentException("there is no such an user");
+        User user=null;
+        // admin login
+        if (adminsList.containsKey(username))
+            user = adminsList.get(username);
+        // student login
+        if (studentsList.containsKey(username))
+            user = studentsList.get(username);
+        // wrong password
+        if (user.getPassword()!=password)
+            throw new IllegalArgumentException("wrong password");
+        // already login
+        if (user.getStatus())
+            throw new IllegalArgumentException("the user is already logged in");
+        // login
+        user.login();
+        return user;
+    }
+    public void logout(String username, String password) {
+        // no such a user
+        if (!adminsList.containsKey(username) & !studentsList.containsKey(username))
+            throw new IllegalArgumentException("there is no such an user");
+        User user=null;
+        // admin logout
+        if (adminsList.containsKey(username))
+            user = adminsList.get(username);
+        // student logout
+        if (studentsList.containsKey(username))
+            user = studentsList.get(username);
+        // wrong password
+        if (user.getPassword()!=password)
+            throw new IllegalArgumentException("wrong password");
+        // already login
+        if (!user.getStatus())
+            throw new IllegalArgumentException("the user is not logged in");
+        // logout
+        user.logout();
+    }
+    public void registerToCourse(String userName,int courseNumber) {
+        // no such a course
+        if (!courselist.containsKey(courseNumber))
+            throw new IllegalArgumentException("no such a course");
+        // no seats available
+        Course course = courselist.get(courseNumber);
+        if (course.getSeatsAvailable()==0)
+            throw new IllegalArgumentException("no seats available");
+        // student doesnt complete kdamCourse
+        if (!this.studentsList.get(userName).finishKdamCourses(this.courselist.get(courseNumber).getKdamCoursesList()))
+            throw new IllegalArgumentException("the student doesnt complete all the required kdam courses");
+        // the student isnt login
+        if(!this.studentsList.get(userName).getStatus())
+        {
+            throw new IllegalArgumentException("the student isnt login");
+        }
+        this.courselist.get(courseNumber).registerStudent(userName);
+        this.studentsList.get(userName).addCourse(courseNumber);
+
+    }
+    public String kdamCheck(int courseNumber) {
+        if (!courselist.containsKey(courseNumber))
+            throw new IllegalArgumentException("there is not such a course");
+        return courselist.get(courseNumber).getKdam();
+
+    }
+    public String CourseStat(int courseNumber) {
+        if (!courselist.containsKey(courseNumber))
+            throw new IllegalArgumentException("there is not such a course");
+        return courselist.get(courseNumber).getStat();
+
+    }
+    public String studentStat(String username) {
+        if (!this.studentsList.containsKey(username))
+            throw new IllegalArgumentException("there is no such an user");
+        return this.studentsList.get(username).getStat();
+
+    }
+    public boolean isRegisterd(String username,int courseNumber) {
+        if (!this.studentsList.containsKey(username))
+            throw new IllegalArgumentException("there is no such an user");
+        if (!courselist.containsKey(courseNumber))
+            throw new IllegalArgumentException("there is not such a course");
+        return this.courselist.get(courseNumber).isStudentRegistered(username);
+
+    }
+    public boolean unregister(String username,int courseNumber) {
+        if (!this.studentsList.containsKey(username))
+            throw new IllegalArgumentException("there is no such an user");
+        if (!courselist.containsKey(courseNumber))
+            throw new IllegalArgumentException("there is not such a course");
+        if (!this.courselist.get(courseNumber).isStudentRegistered(username))
+            throw new IllegalArgumentException("the student is not registerd to this course");
+        this.courselist.get(courseNumber).unregister(username);
+        return true;
+    }
+    public String myCourses(String username) {
+        String answer="";
+        if (!this.studentsList.containsKey(username))
+            throw new IllegalArgumentException("there is no such an user");
+        for (Pair<Integer,Course> coursePair : courselist){
+            if (coursePair.getValue().isStudentRegistered(username))
+                answer=answer+ coursePair.getValue().getStat();
+        }
+        return answer;
+
+    }
+    // private methods
+    private List<Integer> stringToListInt(String s) {
         String sCopy=s;
         sCopy=sCopy.substring(1,sCopy.length()-1);//remove the []
         List<Integer> ans = new LinkedList<>();
@@ -130,9 +245,7 @@ public class Database {
         }
         return ans;
     }
-
-    private int stringToInt(String s)
-    {
+    private int stringToInt(String s) {
         int pow=0;
         int ans=0;
         for (int i=s.length()-1;i>=0 ;i--)
@@ -143,100 +256,6 @@ public class Database {
         return ans;
 
 
-    }
-
-    public void RegisterAdmin (String username, String password)
-    {
-        if (adminsList.containsKey(username) | studentsList.containsKey(username))
-            throw new IllegalArgumentException("username is already registered");
-        adminsList.put(username,new Admin(username,password));
-
-    }
-    public void StudentRegister(String username, String password) {
-        if (adminsList.containsKey(username) | studentsList.containsKey(username))
-            throw new IllegalArgumentException("username is already registered");
-        studentsList.put(username,new Student(username,password));
-
-    }
-
-    public User login(String username, String password) {
-        // no such a user
-        if (!adminsList.containsKey(username) & !studentsList.containsKey(username))
-            throw new IllegalArgumentException("there is no such an user");
-        User user=null;
-        if (adminsList.containsKey(username))
-            user = adminsList.get(username);
-        if (studentsList.containsKey(username))
-            user = studentsList.get(username);
-        // wrong password
-        if (user.getPassword()!=password)
-            throw new IllegalArgumentException("wrong password");
-        // already login
-        if (user.getStatus())
-            throw new IllegalArgumentException("the user is already logged in");
-        // login
-        user.login();
-        return user;
-    }
-
-    public void logout(String username, String password) {
-        // no such a user
-        if (!adminsList.containsKey(username) & !studentsList.containsKey(username))
-            throw new IllegalArgumentException("there is no such an user");
-        User user=null;
-        if (adminsList.containsKey(username))
-            user = adminsList.get(username);
-        if (studentsList.containsKey(username))
-            user = studentsList.get(username);
-        // wrong password
-        if (user.getPassword()!=password)
-            throw new IllegalArgumentException("wrong password");
-        // already login
-        if (!user.getStatus())
-            throw new IllegalArgumentException("the user is not logged in");
-        // logout
-        user.logout();
-    }
-    public void registerToCourse(String userName,int courseNumber)
-    {
-        // no such a course
-        if (!courselist.containsKey(courseNumber))
-            throw new IllegalArgumentException("no such a course");
-        // no seats available
-        Course course = courselist.get(courseNumber);
-        if (course.getSeatsAvailable()==0)
-            throw new IllegalArgumentException("no seats available");
-        // student doesnt complete kdamCourse
-        // the student isnt login
-        if(true)
-        {
-
-        }
-        // admin cant register to course
-    }
-    public String kdamCheck(int courseNumber) {
-        if (!courselist.containsKey(courseNumber))
-            throw new IllegalArgumentException("there is not such a course");
-        courselist.get(courseNumber).getKdam();
-
-    }
-
-    public String CourseStat(int courseNumber) {
-
-
-    }
-
-    public String studentStat(String username) {
-
-    }
-
-    public boolean isRegisterd(String userName,int courseNumber) {
-    }
-
-    public boolean unregister(String usreName,int courseNumber) {
-    }
-
-    public String myCourses(String userName) {
     }
     private String listToString(List<Integer> list) {
         // have to implement

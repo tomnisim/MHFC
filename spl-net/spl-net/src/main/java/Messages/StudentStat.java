@@ -12,6 +12,22 @@ public class StudentStat extends Message {
     {
 
     }
+
+    @Override
+    public String getUser() {
+        return null;
+    }
+
+    @Override
+    public String getPassword() {
+        return null;
+    }
+
+    @Override
+    public int getCourseNumber() {
+        return -1;
+    }
+
     public String toString(){return "";}
 
     public String getUsername() {
