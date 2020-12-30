@@ -10,24 +10,117 @@ import java.util.List;
 
 public class MessageEncoderDecoder  {
     private byte[] bytes = new byte[1 << 10]; //start with 1k
-    private int opcode;
+    private byte[] opcodeBytes = new byte[2];
+    private byte[] passwordBytes = new byte[1<<10];
+    private byte[] userNameBytes = new byte[1<<10];
+    private byte[] courseNumberBytes = new byte[2];
+    int courseNumberBytesCount = 0;
+    int numOfZero = 0;
+    int opcodeBytesCount = 0;
+    int userNameBytesCount = 0;
+    int passwordBytesCount = 0;
+    private int opcode=-1;
     private int messageInd = 0;
 
     //@Override
     public Message decodeNextByte(byte nextByte) {
         //notice that the top 128 ascii characters have the same representation as their utf-8 counterparts
         //this allow us to do the following comparison
+        if (opcodeBytesCount==opcodeBytes.length)
+        {
+            if (opcode==-1)
+            {
+                decodeOpcode();
+            }
+            if (opcode==1 | opcode==2 | opcode==3 )
+            {
+                if (nextByte=='\0')//check
+                {
+                    numOfZero++;
+                    return null;
+                }
+                if (numOfZero==0)
+                {
+                    if (userNameBytesCount>=userNameBytes.length)
+                    {
+                        userNameBytes = Arrays.copyOf(userNameBytes, userNameBytesCount * 2);
+                    }
+                    userNameBytes[userNameBytesCount]=nextByte;
+                    userNameBytesCount++;
+                    return null;
+                }
+                if (numOfZero==1)
+                {
+                    if (passwordBytesCount>=passwordBytes.length)
+                    {
+                        passwordBytes = Arrays.copyOf(passwordBytes, passwordBytesCount * 2);
+                    }
+                    passwordBytes[passwordBytesCount]=nextByte;
+                    passwordBytesCount++;
+                    return null;
+                }
+                if (numOfZero==2)
+                {
+                    return decodeAllBytes();
+                }
+                else
+                {
+                    throw new IllegalStateException("there are too many zero");
+                }
+            }
+            else if (opcode==4 | opcode==11 )
+            {
+                return decodeAllBytes();
+            }
+            else if (opcode==5 | opcode==6 | opcode==7 | opcode==9 |opcode==10 )
+            {
+                if (courseNumberBytes.length==courseNumberBytesCount)
+                {
+                    return decodeAllBytes();
+                }
+                else
+                {
+                    courseNumberBytes[courseNumberBytesCount]=nextByte;
+                    courseNumberBytesCount++;
+                    return null;
+                }
+            }
+            else if (opcode==8)
+            {
+                //check if userName bytes[] cleared
 
-
-        if (nextByte == '\n') {
-            return decodeAllBytes();
+                if (nextByte=='\0')//check
+                {
+                    return decodeAllBytes();
+                }
+                else if (userNameBytesCount>=userNameBytes.length)
+                {
+                    userNameBytes = Arrays.copyOf(userNameBytes, userNameBytesCount * 2);
+                }
+                userNameBytes[userNameBytesCount]=nextByte;
+                userNameBytesCount++;
+                return null;
+            }
+            else
+            {
+                throw new IllegalStateException("Illegal opcode");
+            }
+        }
+        else
+        {
+            pushByteToOpcode(nextByte);
         }
 
-        pushByte(nextByte);
         return null; //not a line yet
 
 
 
+    }
+
+    private void pushByteToOpcode(byte nextByte) {
+        opcodeBytes[opcodeBytesCount]=nextByte;
+        opcodeBytesCount++;
+        messageInd++;
     }
 
     //@Override
@@ -35,200 +128,88 @@ public class MessageEncoderDecoder  {
         return (message.toString() + "\n").getBytes(); //uses utf8 by default
     }
 
-    private void pushByte(byte nextByte) {
-        if (messageInd >= bytes.length) {
-            bytes = Arrays.copyOf(bytes, messageInd * 2);
+    private void decodeOpcode()
+    {
+        if (opcode==-1)
+        {
+            opcode = bytesToShort(opcodeBytes);
         }
-
-        bytes[messageInd++] = nextByte;
     }
-
 
     private Message decodeAllBytes(){
 
         // decoding opcode
-        byte[] two = new byte[2];
-        two[0]=bytes[messageInd];
-        messageInd++;
-        two[1]=bytes[messageInd];
-        messageInd++;
-        opcode = bytesToShort(two);
-        byte[] userNameBytes = new byte[1 << 10];
-        byte[] passwordBytes = new byte[1 << 10];
-        byte[] courseBytes = new byte[1 << 10];
+        if (opcode==-1)
+        {
+            throw new IllegalStateException("cant call this method since the opcode does not decode");
+        }
+
 
         if (opcode==1) {
-             // first kind of message
              String username, password; // by the bytes
              // decoding username
-             int index=0;
-             while (bytes[messageInd] != (byte) 0) {
-                 userNameBytes[index]=(bytes[messageInd]);
-                 index++;
-                 messageInd++;
-             }
-             messageInd++;
-             username = new String(userNameBytes,0,messageInd,StandardCharsets.UTF_8);
+             username = new String(userNameBytes,0,userNameBytesCount,StandardCharsets.UTF_8);
              //decoding password
-            index=0;
-            while (bytes[messageInd] != (byte) 0) {
-                passwordBytes[index]=(bytes[messageInd]);
-                index++;
-                messageInd++;
-            }
-            messageInd++;
-
-            password = new String(passwordBytes,0,messageInd,StandardCharsets.UTF_8);
+             password = new String(passwordBytes,0,passwordBytesCount,StandardCharsets.UTF_8);
              return new AdminReg(username, password);
 
          }
         if (opcode==2) {
             String username, password; // by the bytes
             // decoding username
-            int index=0;
-            while (bytes[messageInd] != (byte) 0) {
-                userNameBytes[index]=(bytes[messageInd]);
-                index++;
-                messageInd++;
-            }
-            messageInd++;
-
-            username = new String(userNameBytes,0,messageInd,StandardCharsets.UTF_8);
+            username = new String(userNameBytes,0,userNameBytesCount,StandardCharsets.UTF_8);
             //decoding password
-            index=0;
-            while (bytes[messageInd] != (byte) 0) {
-                passwordBytes[index]=(bytes[messageInd]);
-                index++;
-                messageInd++;
-            }
-            messageInd++;
-
-            password = new String(passwordBytes,0,messageInd,StandardCharsets.UTF_8);
+            password = new String(passwordBytes,0,passwordBytesCount,StandardCharsets.UTF_8);
             return new StudentReg(username, password);
 
         }
         if (opcode==3) {
-            // first kind of message
             String username, password; // by the bytes
             // decoding username
-            int index=0;
-            while (bytes[messageInd] != (byte) 0) {
-                userNameBytes[index]=(bytes[messageInd]);
-                index++;
-                messageInd++;
-            }
-            messageInd++;
-
-            username = new String(userNameBytes,0,messageInd,StandardCharsets.UTF_8);
+            username = new String(userNameBytes,0,userNameBytesCount,StandardCharsets.UTF_8);
             //decoding password
-            index=0;
-            while (bytes[messageInd] != (byte) 0) {
-                passwordBytes[index]=(bytes[messageInd]);
-                index++;
-                messageInd++;
-            }
-            messageInd++;
-
-            password = new String(passwordBytes,0,messageInd,StandardCharsets.UTF_8);
+            password = new String(passwordBytes,0,passwordBytesCount,StandardCharsets.UTF_8);
             return new Login(username, password);
-
         }
         if (opcode==4) {
-
             return new Logout();
-
         }
         if (opcode==5) {
             String courseNumber;
-            int index=0;
-            while (bytes[messageInd] != (byte) '\n') {
-                courseBytes[index]=(bytes[messageInd]);
-                index++;
-                messageInd++;
-            }
-
-            courseNumber = new String(courseBytes,0,messageInd,StandardCharsets.UTF_8);
-
+            courseNumber = new String(courseNumberBytes,0,courseNumberBytesCount,StandardCharsets.UTF_8);
             return new CourseReg(stringToInt(courseNumber));
-
         }
         if (opcode==6) {
             String courseNumber;
-            int index=0;
-            while (bytes[messageInd] != (byte) '\n') {
-                courseBytes[index]=(bytes[messageInd]);
-                index++;
-                messageInd++;
-            }
-
-            courseNumber = new String(courseBytes,0,messageInd,StandardCharsets.UTF_8);
-
+            courseNumber = new String(courseNumberBytes,0,courseNumberBytesCount,StandardCharsets.UTF_8);
             return new KdamCheck(stringToInt(courseNumber));
 
         }
         if (opcode==7) {
             String courseNumber;
-            int index=0;
-            while (bytes[messageInd] != (byte) '\n') {
-                courseBytes[index]=(bytes[messageInd]);
-                index++;
-                messageInd++;
-            }
-
-            courseNumber = new String(courseBytes,0,messageInd,StandardCharsets.UTF_8);
-
+            courseNumber = new String(courseNumberBytes,0,courseNumberBytesCount,StandardCharsets.UTF_8);
             return new CourseStat(stringToInt(courseNumber));
 
         }
         if (opcode==8) {
-            String userName;
-            int index=0;
-            while (bytes[messageInd] != (byte) '0') {
-                userNameBytes[index]=(bytes[messageInd]);
-                index++;
-                messageInd++;
-            }
-            messageInd++;
-
-            userName = new String(userNameBytes,0,messageInd,StandardCharsets.UTF_8);
-
-            return new StudentStat(userName);
-
+            // decoding username
+            String username = new String(userNameBytes,0,userNameBytesCount,StandardCharsets.UTF_8);
+            return new StudentStat(username);
         }
         if (opcode==9) {
             String courseNumber;
-            int index=0;
-            while (bytes[messageInd] != (byte) '\n') {
-                courseBytes[index]=(bytes[messageInd]);
-                index++;
-                messageInd++;
-            }
-
-            courseNumber = new String(courseBytes,0,messageInd,StandardCharsets.UTF_8);
-
+            courseNumber = new String(courseNumberBytes,0,courseNumberBytesCount,StandardCharsets.UTF_8);
             return new IsRegistered(stringToInt(courseNumber));
 
         }
         if (opcode==10) {
             String courseNumber;
-            int index=0;
-            while (bytes[messageInd] != (byte) '\n') {
-                courseBytes[index]=(bytes[messageInd]);
-                index++;
-                messageInd++;
-            }
-
-            courseNumber = new String(courseBytes,0,messageInd,StandardCharsets.UTF_8);
-
+            courseNumber = new String(courseNumberBytes,0,courseNumberBytesCount,StandardCharsets.UTF_8);
             return new UnRegister(stringToInt(courseNumber));
-
         }
         if (opcode==11) {
-
             return new MyCourses();
-
         }
-
         return null;
 
     }

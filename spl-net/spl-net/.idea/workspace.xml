@@ -2,7 +2,27 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="24770f93-7032-4f4a-9881-6b38f8433219" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Messages/ACKMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Messages/ACKMessage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Messages/AdminReg.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Messages/AdminReg.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Messages/CourseReg.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Messages/CourseReg.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Messages/CourseStat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Messages/CourseStat.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Messages/Error.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Messages/Error.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Messages/IsRegistered.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Messages/IsRegistered.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Messages/KdamCheck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Messages/KdamCheck.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Messages/Login.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Messages/Login.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Messages/Logout.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Messages/Logout.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Messages/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Messages/Message.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Messages/MyCourses.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Messages/MyCourses.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Messages/StudentReg.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Messages/StudentReg.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Messages/StudentStat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Messages/StudentStat.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Messages/UnRegister.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Messages/UnRegister.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/bgrs/BgrsProtocol.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bgrs/BgrsProtocol.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/bgrs/MessageEncoderDecoder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bgrs/MessageEncoderDecoder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/resources/Course.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/resources/Course.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/resources/Database.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/resources/Database.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/resources/Student.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/resources/Student.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,6 +67,15 @@
       </list>
     </option>
   </component>
+  <component name="RunManager">
+    <configuration name="Unnamed" type="Application" factoryName="Application" nameIsGenerated="true">
+      <module name="spl-net" />
+      <option name="PROGRAM_PARAMETERS" value="C:\Users\Tom\Desktop\university\secondYear\semester3\SPL\MHFC\MHFC\spl-net\spl-net\src\main\java\bgrs\courses.txt" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -59,6 +88,17 @@
       <updated>1609177771635</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="WindowStateProjectService">
     <state x="538" y="113" key="#com.intellij.ide.util.MemberChooser" timestamp="1609260945249">

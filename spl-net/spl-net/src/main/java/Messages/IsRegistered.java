@@ -8,12 +8,23 @@ public class IsRegistered extends Message {
         this.opcode=9;
         this.courseNumber=courseNumber;
     }
-    public void operation()
-    {
 
-    }
     public String toString()
     {
         return "";
+    }
+    @Override
+    public String getUser() {
+        return null;
+    }
+
+    @Override
+    public String getPassword() {
+        return null;
+    }
+
+    @Override
+    public Integer getCourseNumber() {
+        return courseNumber;
     }
 }

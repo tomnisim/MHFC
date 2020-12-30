@@ -10,12 +10,25 @@ public class AdminReg extends Message {
         this.userName=userName;
         this.password=password;
     }
-    public void operation()
-    {
 
-    }
     public String toString()
     {
         return "";
+    }
+
+    public String getUser() {
+        return userName;
+    }
+
+
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public Integer getCourseNumber() {
+        return null;
     }
 }

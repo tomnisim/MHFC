@@ -8,9 +8,19 @@ public class Logout extends Message {
         this.opcode=4;
 
     }
-    public void operation()
-    {
+    @Override
+    public String getUser() {
+        return null;
+    }
 
+    @Override
+    public String getPassword() {
+        return null;
+    }
+
+    @Override
+    public Integer getCourseNumber() {
+        return null;
     }
     public String toString()
     {

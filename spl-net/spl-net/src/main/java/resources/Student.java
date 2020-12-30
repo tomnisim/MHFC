@@ -14,12 +14,12 @@ public class Student extends User {
         this.finishCourses.add(courseNumber);
     }
     public String getStat() {
-        String answer="Student: "+this.userName;
+        String answer="Student: "+this.userName+'\n';
         answer=answer+" Courses:[";
         for (int i=0;i<this.finishCourses.size();i++){
-            answer=answer+this.finishCourses.get(i)+"|";
+            answer=answer+this.finishCourses.get(i)+",";
         }
-        answer=answer+"]";
+        answer=answer.substring(0, answer.length()-1)+"]";
         return answer;
     }
 

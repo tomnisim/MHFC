@@ -8,12 +8,24 @@ public class CourseReg extends Message {
         this.opcode=5;
         this.courseNumber=courseNumber;
     }
-    public void operation()
-    {
 
-    }
     public String toString()
     {
         return "";
     }
+    @Override
+    public String getUser() {
+        return null;
+    }
+
+    @Override
+    public String getPassword() {
+        return null;
+    }
+
+    @Override
+    public Integer getCourseNumber() {
+        return courseNumber;
+    }
 }
+

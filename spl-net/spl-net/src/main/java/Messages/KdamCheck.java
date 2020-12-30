@@ -8,9 +8,19 @@ public class KdamCheck extends Message {
         this.opcode=6;
         this.courseNumber=courseNumber;
     }
-    public void operation()
-    {
+    @Override
+    public String getUser() {
+        return null;
+    }
 
+    @Override
+    public String getPassword() {
+        return null;
+    }
+
+    @Override
+    public Integer getCourseNumber() {
+        return courseNumber;
     }
     public String toString()
     {

@@ -10,9 +10,19 @@ public class StudentReg extends Message {
         this.userName=userName;
         this.password=password;
     }
-    public void operation()
-    {
+    @Override
+    public String getUser() {
+        return userName;
+    }
 
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public Integer getCourseNumber() {
+        return null;
     }
     public String toString()
     {

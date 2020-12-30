@@ -29,10 +29,10 @@ public class Course {
         String answer="";
         for (int i=0;i<this.kdamCoursesList.size();i++)
         {
-            answer=answer+this.kdamCoursesList.get(i).toString()+"|";
+            answer=answer+this.kdamCoursesList.get(i).toString()+",";
         }
 
-        return answer;
+        return answer.substring(0, answer.length()-1);
     }
 
     public int getSeatsAvailable() {
@@ -40,8 +40,8 @@ public class Course {
     }
 
     public String getStat() {
-        String answer="Course: "+name;
-        answer=answer+" Seats Available: " + seatAvailable +"/"+numOfMaxStudents;
+        String answer="Course: "+name+'\n';
+        answer=answer+" Seats Available: " + seatAvailable +"/"+numOfMaxStudents+'\n';
         answer=answer+" Students Registered:[";
         for (int i=0;i<studentsRegistered.size();i++){
             answer=answer+this.studentsRegistered.get(i);

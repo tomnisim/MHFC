@@ -7,10 +7,14 @@ import resources.Course;
 import resources.Student;
 import resources.User;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
 
 /**
  * Passive object representing the Database where all courses and users are stored.
@@ -28,9 +32,11 @@ public class Database {
     private HashMap<Integer, Course> courselist;
     private HashMap<String, Admin> adminsList;
     private HashMap<String, Student> studentsList;
+
     private static class SingletonHolder {
         private static Database instance = new Database();
     }
+
     private Database() {
         adminsList = new HashMap<String, Admin>();
         studentsList = new HashMap<String, Student>();
@@ -38,6 +44,7 @@ public class Database {
 
 
     }
+
     /**
      * Retrieves the single instance of this class.
      */
@@ -50,63 +57,59 @@ public class Database {
      * into the Database, returns true if successful.
      */
     boolean initialize(String coursesFilePath) {
-        String courses = coursesFilePath; // have to read from the file and create a string that contains all the course info
-        int courseNum=0;
-        String courseName="";
-        String kdamCourseList="";
-        int numOfMaxStudents=0;
-        int place=0;
-        List<Integer> kdamCourse;
-        while (courses.indexOf("|")!=-1)
-        {
-            place = courses.indexOf('|');
-            if (place == -1)
-            {
-                break;// check that it is get out of the function
-            }
-            else
-            {
+        try (BufferedReader b = new BufferedReader(new FileReader(coursesFilePath))) {
+            String line = b.readLine();
+            while (line != null) {
+                String courses = line;
+                int courseNum = 0;
+                String courseName = "";
+                String kdamCourseList = "";
+                int numOfMaxStudents = 0;
+                int place = 0;
+                List<Integer> kdamCourse;
+                place = courses.indexOf('|');
+
                 String courseN = courses.substring(0, place - 1);//check if it include the end of the range
-                courses = courses.substring(place + 1);
+                courses = courses.substring(place + 1);//rest of the line
                 courseNum = stringToInt(courseN);
-            }
-            place = courses.indexOf('|');
-            if (place == -1) {
-                break;// check that it is get out of the function
-            }
-            else
-            {
+
+                place = courses.indexOf('|');
+
                 courseName = courses.substring(0, place - 1);//check if it include the end of the range
                 courses = courses.substring(place + 1);
-            }
-            place = courses.indexOf('|');
-            if (place == -1) {
-                break;// check that it is get out of the function
-            }
-            else
-            {
+
+                place = courses.indexOf('|');
+
                 kdamCourseList = courses.substring(0, place - 1);//check if it include the end of the range
                 kdamCourse = stringToListInt(kdamCourseList);
                 courses = courses.substring(place + 1);
-            }
-            place = courses.indexOf('|');
-            if (place == -1) {
-                break;// check that it is get out of the function
-            }
-            else
-            {
-                String numOfMS = courses.substring(0, place - 1);//check if it include the end of the range
-                courses = courses.substring(place + 1);
+
+
+                String numOfMS = courses;//check if it include the end of the range
                 numOfMaxStudents = stringToInt(numOfMS);
+
+                Course course = new Course(courseNum, courseName, numOfMaxStudents, kdamCourse);
+                courselist.put(courseNum, course);
+
+                line = b.readLine();
+
+                return true;
+
             }
-            Course course=new Course(courseNum,courseName,numOfMaxStudents,kdamCourse);
-            courselist.put(courseNum, course);
 
 
-        }//while
-
+        }
+        catch (Exception e) {
+        }
         return false;
     }
+
+
+
+
+
+
+
     // update database methods
     public void RegisterAdmin (String username, String password) {
         if (adminsList.containsKey(username) | studentsList.containsKey(username))
@@ -218,14 +221,17 @@ public class Database {
         return true;
     }
     public String myCourses(String username) {
-        String answer="";
+        String answer="[";
         if (!this.studentsList.containsKey(username))
             throw new IllegalArgumentException("there is no such an user");
-        for (Pair<Integer,Course> coursePair : courselist){
-            if (coursePair.getValue().isStudentRegistered(username))
-                answer=answer+ coursePair.getValue().getStat();
+        for (Course c:courselist.values())
+        {
+            if(c.isStudentRegistered(username))
+            {
+                answer=answer+c.getStat()+",";
+            }
         }
-        return answer;
+        return answer.substring(0,answer.length()-1)+"]";
 
     }
     // private methods
@@ -261,6 +267,5 @@ public class Database {
         // have to implement
         return "";
     }
-// upa
+
 }
-////tom

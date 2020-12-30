@@ -16,4 +16,18 @@ public class Error extends Message {
         String answer = opcode.toString()+messageOpcode.toString();
         return answer;
     }
+    @Override
+    public String getUser() {
+        return null;
+    }
+
+    @Override
+    public String getPassword() {
+        return null;
+    }
+
+    @Override
+    public Integer getCourseNumber() {
+        return null;
+    }
 }

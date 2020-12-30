@@ -8,14 +8,9 @@ public class StudentStat extends Message {
         this.opcode=8;
         this.username=userName;
     }
-    public void operation()
-    {
-
-    }
-
     @Override
     public String getUser() {
-        return null;
+        return username;
     }
 
     @Override
@@ -24,13 +19,11 @@ public class StudentStat extends Message {
     }
 
     @Override
-    public int getCourseNumber() {
-        return -1;
+    public Integer getCourseNumber() {
+        return null;
     }
+
 
     public String toString(){return "";}
 
-    public String getUsername() {
-        return username;
-    }
 }
