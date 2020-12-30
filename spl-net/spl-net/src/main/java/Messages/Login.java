@@ -1,6 +1,6 @@
 package Messages;
 
-public class Login implements Message {
+public class Login extends Message {
     private int opcode;
     private String userName;
     private String password;
@@ -13,5 +13,9 @@ public class Login implements Message {
     public void operation()
     {
 
+    }
+    public String toString()
+    {
+        return "";
     }
 }

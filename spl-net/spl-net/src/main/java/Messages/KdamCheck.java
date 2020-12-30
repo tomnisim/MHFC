@@ -1,6 +1,6 @@
 package Messages;
 
-public class KdamCheck implements Message {
+public class KdamCheck extends Message {
     private int opcode;
     private int courseNumber;
     public KdamCheck(int courseNumber)
@@ -11,5 +11,9 @@ public class KdamCheck implements Message {
     public void operation()
     {
 
+    }
+    public String toString()
+    {
+        return "";
     }
 }

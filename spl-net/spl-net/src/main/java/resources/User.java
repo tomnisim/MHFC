@@ -15,6 +15,7 @@ public abstract class User {
     public void login(){
         this.status=true;
     }
+
     public void logout(){
         this.status=false;
     }
@@ -25,5 +26,8 @@ public abstract class User {
 
     public boolean getStatus() {
         return status;
+    }
+
+    public String getUserName() { return userName;
     }
 }

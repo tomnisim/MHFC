@@ -1,6 +1,6 @@
 package Messages;
 
-public class AdminReg implements Message {
+public class AdminReg extends Message {
     private int opcode;
     private String userName;
     private String password;
@@ -13,5 +13,9 @@ public class AdminReg implements Message {
     public void operation()
     {
 
+    }
+    public String toString()
+    {
+        return "";
     }
 }

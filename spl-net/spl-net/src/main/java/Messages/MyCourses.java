@@ -1,8 +1,8 @@
 package Messages;
 
-public class MyCourses implements Message {
+public class MyCourses extends Message {
     private int opcode;
-    public MyCourses(int courseNumber)
+    public MyCourses()
     {
         this.opcode=11;
     }
@@ -10,4 +10,5 @@ public class MyCourses implements Message {
     {
 
     }
+    public String toString(){return "";}
 }
