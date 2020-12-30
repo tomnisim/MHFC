@@ -2,14 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="24770f93-7032-4f4a-9881-6b38f8433219" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Messages/StudentStat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Messages/StudentStat.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/bgrs/BgrsProtocol.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bgrs/BgrsProtocol.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/resources/Course.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/resources/Course.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/resources/Database.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/resources/Database.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/resources/Student.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/resources/Student.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/resources/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/resources/User.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
